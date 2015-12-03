@@ -8,22 +8,23 @@ SQL-injections är när en användare lyckas exekvera opålitlig data i en datab
 
 På inloggningssidan går det att logga in som en användare/administratör utan att känna till dess annvändaruppgifter och på så sätt få full tillgång till applikationen.
 
-Det mest förespråkade enligt OWASP [s.7] är att använda sig utav parametriserade frågor, stored procedures eller liknande som hindrar kod i parametrar som exekveras i tolken. 
+Det mest förespråkade enligt OWASP är att använda sig utav parametriserade frågor, stored procedures eller liknande som hindrar kod i parametrar som exekveras i tolken.[2] 
 
 ###Känslig data
 
-Uppgifter som anses vara privata bör göras oläsliga när de skall lagras i en applikation, annan privat data skall ses över så att den inte kan kommas åt publikt.
+Uppgifter som anses vara privata bör göras oläsliga när de skall lagras i en applikation, annan privat data skall ses över så att den inte kan kommas åt publikt.[2] 
 
-Om en besökare går till /message/data (genom att analysera JavaScript-filen som presenteras på inloggningssidan) visas alla meddelanden.
+Om en besökare går till /message/data (genom att analysera JavaScript-filen, eller HTTP-svaret som presenteras på inloggningssidan) visas alla meddelanden.
+
 Om en person kommer åt databasen står alla lösenord i klartext. 
 
-Hasha lösenorden. Och begör att användaren är inloggad för att se meddelanden.
+För att undvika detta bör alla lösenord hashas och  autentisiering/auktorisering begäras för att se meddelanden.
 
 ###Cross-Site Scripting (XSS)
 
 Data som presenteras för användare har inte saniterats, vilket leder till att om en person skickar in JavaScript-kod i ett formulär som sedan sparar texten, kommer detta att exekveras i andra användares webbläsare och orsaka problem.
 
-En elak användare kan få tilgång till en annan användares session och på så vis kunna logga in som den personen och lägga till meddelanden så att det ser ut som att komma från fel person.
+En elak användare kan få tilgång till en annan användares session och på så vis kunna logga in som den personen.
 
 Sanitera alla texter så att tecken verkligen visas rätt och inte kan tolkas som kod.
 
@@ -38,19 +39,18 @@ Se till att alla resurser som anses privata och går att komma åt publikt kräv
 ##Prestandaproblem
 
 ###Kombinera filer
-Flera anrop mot webbserver orsakar längra laddtider, därför bör alla Javascript-filer samlas i en fil och alla inline-script skall även dom flyttas dit. 
+Flera anrop mot webbserver orsakar längre laddtider, därför bör alla Javascript-filer samlas i en fil och alla inline-script skall även dom flyttas dit. [1, 31]
 
-###Ta bort icke existerande filer
+###Ta bort icke existerande/oanvända filer
 Applikationen får klienten att efterfråga resurser som inte finns på servern, vilket leder till anrop som blir överflödiga. Referenser till obefintliga resurser bör därför tas bort.
 
-###Hämtning av oanvända filer
-Filer som inte används på en sida bör tas bort, t.ex. JavaScript för meddelanden på inloggningssidan eller bildfil i CSS-filen som aldrig visas upp.
+Filer som inte används på en sida bör tas bort, t.ex. JavaScript för meddelanden på inloggningssidan eller bildfil i CSS-filen som aldrig visas upp.[1, 31]
 
 ###Placering av CSS
-I dagsläget finns det CSS mellan header och body-taggen, dessa skall placeras inuti header-taggen.
+I dagsläget finns det CSS mellan header och body-taggen, dessa skall placeras inuti header-taggen.[1]
 
 ###Placering av Javascript
-Javascript skall placeras i slutet på dokumentet för att inte hindra övriga HTTP-anrop, vilket leder till en upplevd snabbara laddningstid. 
+Javascript skall placeras i slutet på dokumentet för att inte hindra övriga HTTP-anrop, vilket leder till en upplevd snabbara laddningstid.[1] 
 
 ##Egna reflektioner
 Delete-event triggas inte
