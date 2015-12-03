@@ -39,12 +39,11 @@ Se till att alla resurser som anses privata och går att komma åt publikt kräv
 ##Prestandaproblem
 
 ###Kombinera filer
-Flera anrop mot webbserver orsakar längre laddtider, därför bör alla Javascript-filer samlas i en fil och alla inline-script skall även dom flyttas dit. [1, 31]
+Flera anrop mot webbserver orsakar längre laddtider[1, 31], därför bör alla Javascript/CSS-filer samlas i en fil och alla inline-script/css skall även de flyttas tillrespektive fil. 
 
-###Ta bort icke existerande/oanvända filer
 Applikationen får klienten att efterfråga resurser som inte finns på servern, vilket leder till anrop som blir överflödiga. Referenser till obefintliga resurser bör därför tas bort.
 
-Filer som inte används på en sida bör tas bort, t.ex. JavaScript för meddelanden på inloggningssidan eller bildfil i CSS-filen som aldrig visas upp.[1, 31]
+Filer som inte används på en sida bör tas bort, t.ex. JavaScript för meddelanden på inloggningssidan eller bildfil i CSS-filen som aldrig visas upp.
 
 ###Placering av CSS
 I dagsläget finns det CSS mellan header och body-taggen, dessa skall placeras inuti header-taggen.[1]
@@ -53,7 +52,10 @@ I dagsläget finns det CSS mellan header och body-taggen, dessa skall placeras i
 Javascript skall placeras i slutet på dokumentet för att inte hindra övriga HTTP-anrop, vilket leder till en upplevd snabbara laddningstid.[1] 
 
 ##Egna reflektioner
-Delete-event triggas inte
+Applikationen presenterar en hel del säkerhetshål, och jag hade inte varit nöjd om jag använde applikationen med de brister som finns.
+Utöver ovan påpekade problem verkar inte applikationen fungera som den ska. För administratören triggas aldrig eventet för att ta bort meddeelanden, och något som gäller samtliga är att Meddelanden efterfrågas innan sidan laddad klart i layout-filen, vilket leder till kompileringsfel.
+
+I övrigt en intressant laboration som uppmuntrar till att tänka på säkerhet som var kul att genomföra! Tråkigt att Vagrant krånglar till det på Windows.
 
 ##Referenser
 [1] Steve Sounders, O’Reilly, High Performance Web Sites. September 2007. [Online] Tillgänglig: (http://www.it.iitb.ac.in/frg/wiki/images/4/44/Oreilly.Seve.Suoders.High.Performance.Web.Sites.Sep.2007.pdf). [Hämtad: 3 december 2015]
