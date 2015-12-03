@@ -4,7 +4,7 @@
 ##Säkerhetsproblem
 ###SQL-injections
 
-SQL-injections är när en användare lyckas exekvera opålitlig data i en databas-fråga och på så vis kunna påverka en applikations persitenta lagring.
+SQL-injections är när en användare lyckas exekvera opålitlig data i en databas-fråga och på så vis kunna påverka en applikations persistenta lagring.
 
 På inloggningssidan går det att logga in som en användare/administratör utan att känna till dess annvändaruppgifter och på så sätt få full tillgång till applikationen.
 
@@ -18,13 +18,13 @@ Om en besökare går till /message/data (genom att analysera JavaScript-filen, e
 
 Om en person kommer åt databasen står alla lösenord i klartext. 
 
-För att undvika detta bör alla lösenord hashas och  autentisiering/auktorisering begäras för att se meddelanden.
+För att undvika detta bör alla lösenord hashas och  autentisering/auktorisering begäras för att se meddelanden.
 
 ###Cross-Site Scripting (XSS)
 
 Data som presenteras för användare har inte saniterats, vilket leder till att om en person skickar in JavaScript-kod i ett formulär som sedan sparar texten, kommer detta att exekveras i andra användares webbläsare och orsaka problem.
 
-En elak användare kan få tilgång till en annan användares session och på så vis kunna logga in som den personen.
+En elak användare kan få tillgång till en annan användares session och på så vis kunna logga in som den personen.
 
 Sanitera alla texter så att tecken verkligen visas rätt och inte kan tolkas som kod.
 
@@ -48,12 +48,12 @@ Filer som inte används på en sida bör tas bort, t.ex. JavaScript för meddela
 ###Placering av CSS
 I dagsläget finns det CSS mellan header och body-taggen, dessa skall placeras inuti header-taggen.[1]
 
-###Placering av Javascript
-Javascript skall placeras i slutet på dokumentet för att inte hindra övriga HTTP-anrop, vilket leder till en upplevd snabbara laddningstid.[1] 
+###Placering av JavaScript
+JavaScript skall placeras i slutet på dokumentet för att inte hindra övriga HTTP-anrop, vilket leder till en upplevd snabbare laddningstid.[1] 
 
 ##Egna reflektioner
 Applikationen presenterar en hel del säkerhetshål, och jag hade inte varit nöjd om jag använde applikationen med de brister som finns.
-Utöver ovan påpekade problem verkar inte applikationen fungera som den ska. För administratören triggas aldrig eventet för att ta bort meddeelanden, och något som gäller samtliga är att Meddelanden efterfrågas innan sidan laddad klart i layout-filen, vilket leder till kompileringsfel.
+Utöver ovan påpekade problem verkar inte applikationen fungera som den ska. För administratören triggas aldrig eventet för att ta bort meddelanden, och något som gäller samtliga är att Meddelanden efterfrågas innan sidan laddad klart i layout-filen, vilket leder till kompileringsfel.
 
 I övrigt en intressant laboration som uppmuntrar till att tänka på säkerhet som var kul att genomföra! Tråkigt att Vagrant krånglar till det på Windows.
 
