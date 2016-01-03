@@ -32,13 +32,15 @@ Sanitera alla texter så att tecken verkligen visas rätt och inte kan tolkas so
 
 ###Cross Site Request Forgery (CSRF)
 
-CSRF är att en elak användare kan lyckas göra saker i ett annat webbläsarfönster. Detta kan vara att Person A går in på en sida, som skickar ett POST-anrop till sidan http://www.test.com/message/new, då Person A är inloggad på denna sidan i ett annat fönster skickas cookies med som autentisierar Person A och ett meddelande postas som ser ut att vara skrivet av Person A.
+CSRF är att en elak användare kan lyckas skicka förfalskade HTTP-anrop genom ett annat webbläsarfönster där en person är inloggad. Detta kan vara att Person A går in på en sida, som skickar ett POST-anrop till sidan http://www.test.com/message/new, då Person A är inloggad på denna sidan i ett annat fönster skickas cookies med som autentisierar Person A och ett meddelande postas som ser ut att vara skrivet av Person A.
 
 Med dessa metoder kan personer utsättas för attacker på deras banker, sociala medier etc. och kan orsaka allt ifrån felaktiga pengaöverföringar till åsikter personen i fråga inte står för. Dessa attacker är svåra att motbevisa då allting görs ifrån den attackerades dator.
 
 I applikationens fall kan meddelanden postas utan att personen som är inloggad skrivit det själv eller godkänt det. 
 
-Detta kan undvikas genom att använda sig av Tokens, som är en teckenkombination ofta inte mindre än 25 tecken, som genereras på servern. Denna token skickas sedan med formuläret och valideras på servern. Detta motverkar CSRF genom att den elaka sidan inte kan komma åt och analysera HTML-taggar på http://www.test.com/message/new och kan då inte se den aktuella token som gäller för den användaren.
+Detta kan undvikas genom att använda sig av Tokens [2, p.14], som är en teckenkombination ofta inte mindre än 25 tecken, som genereras på servern. Denna token skickas sedan med formuläret och valideras på servern. Detta motverkar CSRF genom att den elaka sidan inte kan komma åt och analysera HTML-taggar på http://www.test.com/message/new och kan då inte se den aktuella token som gäller för den användaren.
+
+Ett annat alternativ är att ha en CAPTCHA på sidan [2, p.14], vilket tvingar användaren att bekräfta att det är en person som sitter vid sidan. Personligen så kan detta vara frusterande om det uppstår alldeles för ofta, och det kan försvåra användandet av sidan för personer med lässvårigheter [3].
 
 
 ###Öppna resurser
@@ -105,3 +107,5 @@ I övrigt en intressant laboration som uppmuntrar till att tänka på säkerhet 
 [1] Steve Sounders, O’Reilly, High Performance Web Sites. September 2007. [Online] Tillgänglig: (http://www.it.iitb.ac.in/frg/wiki/images/4/44/Oreilly.Seve.Suoders.High.Performance.Web.Sites.Sep.2007.pdf). [Hämtad: 3 december 2015]
 
 [2] "The Ten Most Critical Web Application Security Risks" Open Web Application Security Project, 12 Juni 2013. [Online] Tillgänglig: (https://www.owasp.org/index.php/Top10#OWASP_Top_10_for_2013). [Hämtad: 3 december 2015]
+
+[3] Abigail Marshall, "Don’t lock us out!", 10 Juni 2012. [Online] Tillgänglig: (http://blog.dyslexia.com/dont-lock-us-out/). [Hämtad: 3 januari 2016]
