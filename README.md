@@ -54,29 +54,29 @@ Se till att alla resurser som anses privata och går att komma åt publikt kräv
 ##Prestandaproblem
 
 ###Kombinera filer
-Flera anrop mot webbserver orsakar längre laddtider[1, 31], därför bör alla Javascript/CSS-filer samlas i en fil och alla inline-script/css skall även de flyttas tillrespektive fil. 
+Flera anrop mot webbserver orsakar längre laddtider[1, p.31], därför bör alla Javascript/CSS-filer samlas i en fil och alla inline-script/css skall även de flyttas tillrespektive fil. Även om inline innehåll generellt läses in snabbare menar Souders [1, p.77] att externt innehåll kommer att göra att sidan laddas in snabbare då det tillåter att dessa delar cachas i webbläsaren. 
 
 Applikationen får klienten att efterfråga resurser som inte finns på servern, vilket leder till anrop som blir överflödiga. Referenser till obefintliga resurser bör därför tas bort.
 
 Filer som inte används på en sida bör tas bort, t.ex. JavaScript för meddelanden på inloggningssidan eller bildfil i CSS-filen som aldrig visas upp.
 
 ###Placering av CSS
-I dagsläget finns det CSS mellan header och body-taggen, dessa skall placeras inuti header-taggen.[1]
+I dagsläget finns det CSS mellan header och body-taggen, enligt Souders [1, p.62] bör dessa placeras inuti header-taggen för att få en progressiv rendering av sidan.
 
 ###Placering av JavaScript
-JavaScript skall placeras i slutet på dokumentet för att inte hindra övriga HTTP-anrop, vilket leder till en upplevd snabbare laddningstid.[1] 
+Enligt Souders [1, p.62] ska JavaScript skall placeras i slutet på dokumentet för att inte hindra övriga HTTP-anrop, vilket leder till en upplevd snabbare laddningstid då överiga resurser kan laddas ner parallelt och tillåter en progrssiv rendering av sidan. 
 
 ###Minifiering av resurser
-Att hämta resurser är det som tar längst tid när man i normala fall laddar en sida, en del går inte att göra så mycket åt (t.ex. att ansluta sig till servern), men ett effektivt sätt är att minska storleken på resurserna genom att ta bort kommentarer och whitespaces i filerna.
+Att hämta resurser är det som tar längst tid när man i normala fall laddar en sida, en del går inte att göra så mycket åt (t.ex. att ansluta sig till servern), men ett effektivt sätt är att minska storleken på resurserna genom att ta bort kommentarer och whitespaces i filerna [1 p.90].
 
-Detta bör göras på alla javascript- och css-filer som ska hämtas av användaren. 
+Detta bör göras på alla javascript- och css-filer som ska hämtas av användaren.
 
-Effektiviteten av att minifiera resurser varierar och beror på mängden kommentarer, kodstil m.m., men minskar storleken på filer med ungefär 30%.
+Effektiviteten av att minifiera resurser varierar och beror på mängden kommentarer, kodstil m.m., men minskar storleken på filer med ungefär 20%.
 
 Detta leder till att sidan laddar snabbare och användare får en trevligare upplevelse.
 
-####Komprimering av resurser
-Vidare går det även att komprimera resursfilerna genom att korta ner variabelnamn, detta minskar filstorleken ytterligare men försvårar felsökning av applikationen då det tidigare kan ha sett ut så här:
+####"Obfuscation" av Javascript
+Vidare går det även att komprimera resursfilerna genom att korta ner variabel- och funktionsnamn [1 p.91]. Detta görs ofta som en del i utvecklarens pipeline och görs inte manuellt. Detta minskar filstorleken ytterligare men försvårar felsökning av applikationen då det tidigare kan ha sett ut så här:
 
     var radius = 2;
 	var pi = 3.14159265359;
@@ -88,10 +88,15 @@ Och efter komprimering:
 	var b = 3.14159265359;
     var c = b * a * a;
 
-###Cache-header
-För att undvika onödiga HTTP-anrop till servern bör statiska resurser cachas i webbläsaren. Detta kan göras genom att skicka med "max-age"-headern som talar om i hur många sekunder en fil ska sparas innan webbläsaren bör kolla efter en uppdatering.
+###Komprimering av resurser
+För att ytterligare korta ner HTTP-anropen bör man enligt Souders [1, p.50] komprimera vissa filer med GZIP. Detta är någonting som ställs in på webbservern om den har stöd för det och ska i sådana fall skicka tillbaka en "Content-Encoding"-header i HTTP-anropet för att påvisa vilken teknik som är använd för komprimeringen. 
 
-De resurser som sällan ändras (javscript, css, logotyper m.m.) kan ha en väldigt lång max-age på 6 månader. I dessa fall kan det vara rekomenderat att ha med versionsnummer i filnamnet, alternativt i en query string:
+Javascript, CSS och HTML bör komprimeras, dock ska bilder och PDF-filer inte komprimeras enligt Souders [1, p.51] då det är en onödig användning av serverns resurser då dessa filer redan är komprimerade och kan potentiellt öka filstorleken.
+
+###Cache-header
+För att undvika onödiga HTTP-anrop till servern bör statiska resurser cachas i webbläsaren [1, p.47]. Detta kan göras genom att skicka med "Cache-Control: max-age"-headern som talar om i hur många sekunder en fil ska sparas innan webbläsaren bör kolla efter en uppdatering. [1, p.43]
+
+De resurser som sällan ändras (javscript, css, logotyper m.m.) kan ha en väldigt lång max-age på 6 månader. I dessa fall kan det enligt Souders [1, p.48] vara rekomenderat att ha med versionsnummer i filnamnet, alternativt i en query string:
 
 `stylesheet-1.12.css` alternativt `stylesheet.css?version=1.12`
 
