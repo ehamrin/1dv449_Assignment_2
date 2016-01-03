@@ -8,6 +8,8 @@ SQL-injections är när en användare lyckas exekvera opålitlig data i en datab
 
 På inloggningssidan går det att logga in som en användare/administratör utan att känna till dess annvändaruppgifter och på så sätt få full tillgång till applikationen.
 
+Detta går att åstadkomma genom att skriva in valfritt användarnamn och ````1' or 1='1```` som lösenord, vilket kommer att logga in användaren oavsett om man känner till ett lösenord eller inte.
+
 Det mest förespråkade enligt OWASP är att använda sig utav parametriserade frågor, stored procedures eller liknande som hindrar kod i parametrar som exekveras i tolken.[2] 
 
 ###Känslig data
@@ -27,6 +29,17 @@ Data som presenteras för användare har inte saniterats, vilket leder till att 
 En elak användare kan få tillgång till en annan användares session och på så vis kunna logga in som den personen.
 
 Sanitera alla texter så att tecken verkligen visas rätt och inte kan tolkas som kod.
+
+###Cross Site Request Forgery (CSRF)
+
+CSRF är att en elak användare kan lyckas göra saker i ett annat webbläsarfönster. Detta kan vara att Person A går in på en sida, som skickar ett POST-anrop till sidan http://www.test.com/message/new, då Person A är inloggad på denna sidan i ett annat fönster skickas cookies med som autentisierar Person A och ett meddelande postas som ser ut att vara skrivet av Person A.
+
+Med dessa metoder kan personer utsättas för attacker på deras banker, sociala medier etc. och kan orsaka allt ifrån felaktiga pengaöverföringar till åsikter personen i fråga inte står för. Dessa attacker är svåra att motbevisa då allting görs ifrån den attackerades dator.
+
+I applikationens fall kan meddelanden postas utan att personen som är inloggad skrivit det själv eller godkänt det. 
+
+Detta kan undvikas genom att använda sig av Tokens, som är en teckenkombination ofta inte mindre än 25 tecken, som genereras på servern. Denna token skickas sedan med formuläret och valideras på servern. Detta motverkar CSRF genom att den elaka sidan inte kan komma åt och analysera HTML-taggar på http://www.test.com/message/new och kan då inte se den aktuella token som gäller för den användaren.
+
 
 ###Öppna resurser
 
@@ -50,6 +63,37 @@ I dagsläget finns det CSS mellan header och body-taggen, dessa skall placeras i
 
 ###Placering av JavaScript
 JavaScript skall placeras i slutet på dokumentet för att inte hindra övriga HTTP-anrop, vilket leder till en upplevd snabbare laddningstid.[1] 
+
+###Minifiering av resurser
+Att hämta resurser är det som tar längst tid när man i normala fall laddar en sida, en del går inte att göra så mycket åt (t.ex. att ansluta sig till servern), men ett effektivt sätt är att minska storleken på resurserna genom att ta bort kommentarer och whitespaces i filerna.
+
+Detta bör göras på alla javascript- och css-filer som ska hämtas av användaren. 
+
+Effektiviteten av att minifiera resurser varierar och beror på mängden kommentarer, kodstil m.m., men minskar storleken på filer med ungefär 30%.
+
+Detta leder till att sidan laddar snabbare och användare får en trevligare upplevelse.
+
+####Komprimering av resurser
+Vidare går det även att komprimera resursfilerna genom att korta ner variabelnamn, detta minskar filstorleken ytterligare men försvårar felsökning av applikationen då det tidigare kan ha sett ut så här:
+
+    var radius = 2;
+	var pi = 3.14159265359;
+    var area = pi * radius * radius;
+
+Och efter komprimering:
+
+	var a = 2;
+	var b = 3.14159265359;
+    var c = b * a * a;
+
+###Cache-header
+För att undvika onödiga HTTP-anrop till servern bör statiska resurser cachas i webbläsaren. Detta kan göras genom att skicka med "max-age"-headern som talar om i hur många sekunder en fil ska sparas innan webbläsaren bör kolla efter en uppdatering.
+
+De resurser som sällan ändras (javscript, css, logotyper m.m.) kan ha en väldigt lång max-age på 6 månader. I dessa fall kan det vara rekomenderat att ha med versionsnummer i filnamnet, alternativt i en query string:
+
+`stylesheet-1.12.css` alternativt `stylesheet.css?version=1.12`
+
+När versionsnumret byts ut kommer det att betraktas som en ny fil och laddas om.
 
 ##Egna reflektioner
 Applikationen presenterar en hel del säkerhetshål, och jag hade inte varit nöjd om jag använde applikationen med de brister som finns.
